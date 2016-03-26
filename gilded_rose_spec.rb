@@ -1,5 +1,5 @@
 require './gilded_rose.rb'
-require './proxies/base_item_proxy.rb'
+require './item_proxies.rb'
 require "rspec"
 
 describe GildedRose do
@@ -102,6 +102,15 @@ describe IncreasingQualityVariableProxy do
         proxy = IncreasingQualityVariableProxy.new(item)
 
         expect { proxy.end_of_day }.to change { item.quality }.by(1)
+      end
+    end
+
+    describe 'maximum quality' do
+      it 'is never higher than 50' do
+        item = Item.new('Base', 6, 49)
+        proxy = IncreasingQualityVariableProxy.new(item)
+
+        expect { proxy.end_of_day }.to change { item.quality }.to(50)
       end
     end
   end

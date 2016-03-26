@@ -26,8 +26,12 @@ class BaseItemProxy
 end
 
 class IncreasingQualityProxy < BaseItemProxy
+  def maximum_quality
+    50
+  end
+
   def update_quality
-    if item.quality < 50
+    if item.quality < maximum_quality
       item.instance_eval { @quality = @quality + 1 }
     end
   end
@@ -38,19 +42,25 @@ class LegendaryItemProxy < BaseItemProxy
   end
 end
 
-class IncreasingQualityVariableProxy < BaseItemProxy
+class IncreasingQualityVariableProxy < IncreasingQualityProxy
+  def quality_adjusted_to_maximum(amount_to_increase_by)
+    [(item.quality + amount_to_increase_by), maximum_quality].min
+  end
+
   def update_quality
     return if item.quality == 0
 
     if item.sell_in <= 0
-      item.instance_eval { @quality = 0 }
+      adjusted_quality = 0
     elsif item.sell_in <= 5
-      item.instance_eval { @quality = @quality + 3 }
+      adjusted_quality = quality_adjusted_to_maximum(3)
     elsif item.sell_in <= 10
-      item.instance_eval { @quality = @quality + 2 }
+      adjusted_quality = quality_adjusted_to_maximum(2)
     else
-      item.instance_eval { @quality = @quality + 1 }
+      adjusted_quality = quality_adjusted_to_maximum(1)
     end
+
+    item.instance_eval { @quality = adjusted_quality}
   end
 end
 
