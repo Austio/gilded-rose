@@ -8,5 +8,4 @@ class Item
     @quality = quality
   end
 
-
 end

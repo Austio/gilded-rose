@@ -4,6 +4,12 @@ class GildedRose
 
   @items = []
 
+  def items
+    @items.each do |item|
+      puts item.inspect
+    end
+  end
+
   def initialize
     @items = []
     @items << Item.new("+5 Dexterity Vest", 10, 20)
